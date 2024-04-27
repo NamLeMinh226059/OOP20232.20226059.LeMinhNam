@@ -1,13 +1,13 @@
-package hust.soict.dsai.aims.Aims;
+package hust.soict.ict.aims.Aims;
 
 
 import java.util.List;
 import java.util.Scanner;
 
-import hust.soict.dsai.aims.cart.Cart;
-import hust.soict.dsai.aims.media.Book;
-import hust.soict.dsai.aims.media.Media;
-import hust.soict.dsai.aims.store.Store;
+import hust.soict.ict.aims.cart.Cart;
+import hust.soict.ict.aims.media.Book;
+import hust.soict.ict.aims.media.Media;
+import hust.soict.ict.aims.store.Store;
 
 public class Aims {
     private static Store store = new Store();

@@ -1,4 +1,4 @@
-package hust.soict.dsai.aims.media;
+package hust.soict.ict.aims.media;
 
 public class DigitalVideoDisc extends Disc implements Playable {
     public DigitalVideoDisc() {

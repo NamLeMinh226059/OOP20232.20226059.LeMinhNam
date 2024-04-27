@@ -1,5 +1,5 @@
-package hust.soict.dsai.aims.cart;
-import hust.soict.dsai.aims.media.Media;
+package hust.soict.ict.aims.cart;
+import hust.soict.ict.aims.media.Media;
 
 import java.util.ArrayList;
 import java.util.Collections;
