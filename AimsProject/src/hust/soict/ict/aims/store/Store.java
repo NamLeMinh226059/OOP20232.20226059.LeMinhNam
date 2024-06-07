@@ -1,69 +1,77 @@
 package hust.soict.ict.aims.store;
-
 import java.util.ArrayList;
-import hust.soict.ict.aims.media.Media;
 
+import hust.soict.ict.aims.media.Media;;
 public class Store {
+
     private ArrayList<Media> itemsInStore = new ArrayList<Media>();
 
-    public void addMedia(Media media) {
-        itemsInStore.add(media);
-        System.out.println("Media added to the store: " + media.getTitle());
-    }
+    public ArrayList<Media> getItemsInStore() {
+		return itemsInStore;
+	}
 
-    public void removeMedia(Media media) {
-        if (itemsInStore.remove(media)) {
-            System.out.println("Media removed from the store: " + media.getTitle());
-        } else {
-            System.out.println("Media not found in the store.");
-        }
-    }
+	 public void addMedia(Media media) {
+	        for (Media item : itemsInStore) {
+	            if (item.isMatch(media.getTitle())) {
+	                System.out.println("This media item already exists in the store.");
+	                return;
+	            }
+	        }
 
-    public void showItems() {
-        System.out.println("Items in the store:");
-        System.out.println("--------------------------------");
-        for (Media media : itemsInStore) {
-            System.out.println(media.toString());
-        }
-        System.out.println("--------------------------------");
-    }
-    
-    public void searchById(int id) {
-        boolean found = false;
-        for (Media media : itemsInStore) {
-            if (media.getId() == id) {
-                System.out.println("Media found:");
-                System.out.println(media.toString());
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            System.out.println("Cannot find media with the given ID.");
-        }
-    }
+	        itemsInStore.add(media);
+	        System.out.println("The media item has been added to the store.");
+	    }
+	
+	 public void removeMedia(Media media) {
+	        for (int i = 0; i < itemsInStore.size(); i++) {
+	            Media item = itemsInStore.get(i);
+	            if (item.isMatch(media.getTitle())) {
+	                itemsInStore.remove(i);
+	                System.out.println("The media item has been removed from the store.");
+	                return;
+	            }
+	        }
+		
+		System.out.println("This DVD is not exist");
+		return;
+	}
+	 public boolean removeMedia(String mediaName) {
+		    for (int i = 0; i < itemsInStore.size(); i++) {
+		        Media item = itemsInStore.get(i);
+		        if (item.getTitle().equalsIgnoreCase(mediaName)) {
+		            itemsInStore.remove(i);
+		            System.out.println("The media item has been removed from the store.");
+		            return true;
+		        }
+		    }
+		    System.out.println("This media item does not exist.");
+		    return false;
+		}
 
-    public Media searchByTitle(String title) {
-        for (Media media : itemsInStore) {
-            if (media.getTitle().equalsIgnoreCase(title)) {
-                System.out.println("Media found:");
-                System.out.println(media.toString());
-                return media;
-            }
-        }
-        System.out.println("Cannot find media with the given title.");
-        return null;
-    }
+	
+	 public Media searchByTitle(String title) {
+		    for (Media media : itemsInStore) {
+		        if (media.isMatch(title)) {
+		            return media;
+		        }
+		    }
+		    return null; // Media not found
+		}
 
-    public boolean removeMediaByTitle(String title) {
-        Media media = searchByTitle(title);
-        if (media != null) {
-        	return itemsInStore.remove(media);
-        }
-        return false;
-        
-    }
-    
+	public Media searchByID(int id) {
+		    for (Media media : itemsInStore) {
+		        if (media.isMatch(id)) {
+		            return media;
+		        }
+		    }
+		    return null; // Media not found
+		}
+	public void print() {
+		System.out.println("Store has following items");
+		for (int i = 0; i < itemsInStore.size(); i++) {
+			
+			 System.out.println((i+1) + ". " + itemsInStore.get(i).toString());
+		}
+	}
 
 }
-
