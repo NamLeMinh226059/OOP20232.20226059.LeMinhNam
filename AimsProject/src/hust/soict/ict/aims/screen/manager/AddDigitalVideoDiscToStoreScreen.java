@@ -1,4 +1,4 @@
-package hust.soict.ict.aims.screen.customer.view;
+package hust.soict.ict.aims.screen.manager;
 
 import hust.soict.ict.aims.media.DigitalVideoDisc;
 import hust.soict.ict.aims.store.Store;

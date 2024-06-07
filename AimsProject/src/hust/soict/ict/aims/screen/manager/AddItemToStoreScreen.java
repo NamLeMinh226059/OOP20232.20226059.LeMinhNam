@@ -1,7 +1,6 @@
-package hust.soict.ict.aims.screen.customer.view;
+package hust.soict.ict.aims.screen.manager;
 
 import hust.soict.ict.aims.store.Store;
-import hust.soict.ict.aims.screen.manager.StoreManagerScreen;
 
 import javax.swing.*;
 import java.awt.*;
