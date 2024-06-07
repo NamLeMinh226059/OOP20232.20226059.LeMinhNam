@@ -4,76 +4,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Book extends Media {
-	private List<String> author = new ArrayList <String>();
-	private int id;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public Book() {
-		// TODO Auto-generated constructor stub
+    private List<String> authors = new ArrayList<String>();
 
-	}
-	public Book(String title, String category, float cost) {
-	    super(title, category, cost);
-	}
-	public Book(String title, String category, float cost, List<String> author) {
-	    super(title, category, cost);
-	    this.author = author;
-	}
-	public Book(String title, String category, float cost, List<String> author, int id) {
-	    super(title, category, cost);
-	    this.author = author;
-	    this.id = id;
-	}
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+    public List<String> getAuthors() {
+        return authors;
+    }
 
-	}
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
 
-	public List<String> getAuthor() {
-		return author;
-	}
+    public Book(int id, String title, String category, float cost, String... authors) {
+        super(id, title, category, cost);
+        for(String author: authors){
+            this.authors.add(author);
+        }
+    }
+    public Book(int id, String title, String category, float cost, List<String> authors) {
+        super(id, title, category, cost);
+        this.authors = authors;
+    }
 
-	public void setAuthor(List<String> author) {
-		this.author = author;
-	}
-	
-	public void addAuthor(String authorname) {
-		boolean check = false;
-		for (String name: author) {
-			if (name.equals(authorname)) {
-				check = true;
-			}
-			
-		}
-		if (!check) {
-			author.add(authorname);
-		}
-	}
-	public void removeAuthor(String authorname) {
-		boolean check = false;
-		for (String name: author) {
-			if (name.equals(authorname)) {
-				check = true;
-			}
-			
-		}
-		if (check) {
-			author.remove(authorname);
-		}
-	}
-	@Override
-	public String toString() {
-	    StringBuilder sb = new StringBuilder();
-	    sb.append("Book Information:\n");
-	    sb.append("Title: ").append(getTitle()).append("\n");
-	    sb.append("Category: ").append(getCategory()).append("\n");
-	    sb.append("Cost: ").append(getCost()).append("\n");
-	    sb.append("Authors: ").append(getAuthor()).append("\n");
-	    sb.append("ID: ").append(getId()).append("\n");
-	    return sb.toString();
-	}
+    public Book(int id, String title, String category, float cost) {
+        super(id, title, category, cost);
+    }
+
+    public void addAuthor(String authorName){
+        if(!authors.contains(authorName)){
+            authors.add(authorName);
+        }
+        else{
+            System.out.println("The author is already in the author list");
+        }
+    }
+
+    public void removeAuthor(String authorName){
+        if(authors.contains(authorName)){
+            authors.remove(authorName);
+        }
+        else{
+            System.out.println("The author is not in the author list");
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        return "Book: " + super.toString() + " - " + getAuthors();
+    }
 }

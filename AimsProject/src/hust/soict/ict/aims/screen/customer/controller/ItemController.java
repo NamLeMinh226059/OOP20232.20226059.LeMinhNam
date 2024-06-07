@@ -1,12 +1,10 @@
 package hust.soict.ict.aims.screen.customer.controller;
 
-import javax.swing.JOptionPane;
-
 import hust.soict.ict.aims.cart.Cart;
-import hust.soict.ict.aims.exception.LimitExceededException;
+import hust.soict.ict.aims.exception.CartFullException;
 import hust.soict.ict.aims.exception.PlayerException;
-import hust.soict.ict.aims.media.Media;
-import hust.soict.ict.aims.media.Playable;
+import hust.soict.ict.aims.media.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -16,59 +14,134 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
 public class ItemController {
-
-    @FXML
-    private Button btnAddToCart;
-
-    @FXML
-    private Button btnPlay;
-
-    @FXML
-    private Label lblTitle;
-
-    @FXML
-    private Label lblCost;
-
     private Media media;
     private Cart cart;
-    public ItemController(Cart cart) {
+    @FXML
+    private Button btnAddtoCart;
+    @FXML
+    private Button btnPlay;
+    @FXML
+    private Label lblTitle;
+    @FXML
+    private Label lblCost;
+    @FXML
+    void btnAddtoCartClicked(ActionEvent event) throws CartFullException {
+        if(cart.getItemsOrdered().size() < cart.MAX_NUMBERS_ORDERS){
+            if (cart != null && media != null) {
+                cart.addMedia(media);
+            }
+        }
+        else {
+            String errorMessage = "ERROR: Cart is full";
+            System.err.println(errorMessage);
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Cart is full");
+                alert.setHeaderText(null);
+                alert.setContentText(errorMessage);
+                alert.showAndWait();
+            });
+        }
+    }
+
+    @FXML
+    void btnPlayClicked(ActionEvent event) throws PlayerException {
+        if(media instanceof DigitalVideoDisc){
+            showDVDInformation((DigitalVideoDisc) media);
+        } else if (media instanceof CompactDisc) {
+            showCDInformation((CompactDisc) media);
+        }
+    }
+    private void showDVDInformation(DigitalVideoDisc dvd) throws PlayerException {
+        if(dvd.getLength() > 0){
+            String information = "DVD Information:\n" +
+                    "Title: " + dvd.getTitle() + "\n" +
+                    "Category: " + dvd.getCategory() + "\n" +
+                    "Cost: $" + String.format("%.2f", dvd.getCost()) + "\n" +
+                    "Length: " + dvd.getLength() + " minutes\n" +
+                    "Director: " + dvd.getDirector();
+
+            showMediaInformation(information);
+        }
+        else{
+            String errorMessage = "ERROR: DigitalVideoDisc length is non-positive.";
+            System.err.println(errorMessage);
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Illegal DVD Length");
+                alert.setHeaderText(null);
+                alert.setContentText(errorMessage);
+                alert.showAndWait();
+            });
+        }
+    }
+
+    private void showCDInformation(CompactDisc cd) {
+        if (cd.getLength() > 0) {
+            boolean hasZeroLengthTrack = false;
+            StringBuilder tracksInformation = new StringBuilder();
+            for (Track track : cd.getTracks()) {
+                tracksInformation.append(track.getTitle()).append(" - ").append(track.getLength()).append(" minutes\n");
+                if (track.getLength() == 0) {
+                    hasZeroLengthTrack = true;
+                }
+            }
+
+            if (hasZeroLengthTrack) {
+                String errorMessage = "ERROR: CD contains a track with zero length.";
+                System.err.println(errorMessage);
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Illegal Track Length");
+                    alert.setHeaderText(null);
+                    alert.setContentText(errorMessage);
+                    alert.showAndWait();
+                });
+            } else {
+                String information = "CD Information:\n" +
+                        "Title: " + cd.getTitle() + "\n" +
+                        "Category: " + cd.getCategory() + "\n" +
+                        "Cost: $" + String.format("%.2f", cd.getCost()) + "\n" +
+                        "Artist: " + cd.getArtist() + "\n" +
+                        "Tracks:\n" + tracksInformation.toString();
+
+                showMediaInformation(information);
+            }
+        } else {
+            String errorMessage = "ERROR: CD length is non-positive.";
+            System.err.println(errorMessage);
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Illegal CD Length");
+                alert.setHeaderText(null);
+                alert.setContentText(errorMessage);
+                alert.showAndWait();
+            });
+        }
+    }
+
+    private void showMediaInformation(String information) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Media Information");
+        alert.setHeaderText(null);
+        alert.setContentText(information);
+
+        alert.showAndWait();
+    }
+    public void setData(Media media, Cart cart){
         this.cart = cart;
-    }
-
-    @FXML
-    void btnAddToCartClicked(ActionEvent event) {
-        int numAdded;
-        try {
-            numAdded = cart.addMedia(media);
-        } catch (LimitExceededException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            alert.showAndWait();
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    void btnPlayClicked(ActionEvent event) {
-        try {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, ((Playable) media).play().toString());
-            alert.showAndWait();
-        } catch (PlayerException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            alert.showAndWait();
-        }
-
-    }
-
-    public void setData(Media media) {
         this.media = media;
         lblTitle.setText(media.getTitle());
         lblCost.setText(media.getCost() + " $");
-        if (media instanceof Playable) {
+        if(media instanceof Playable){
             btnPlay.setVisible(true);
         }
         else {
             btnPlay.setVisible(false);
-            HBox.setMargin(btnAddToCart, new Insets(0, 0, 0, 60));
+            HBox.setMargin(btnAddtoCart, new Insets(0, 0, 0, 60));
         }
+    }
+    public ItemController(){
+
     }
 }
