@@ -1,8 +1,8 @@
-package AimsProject.hust.soict.ict.aims.screen.manager;
+package hust.soict.ict.aims.screen.manager;
 
-import AimsProject.hust.soict.ict.aims.media.CompactDisc;
-import AimsProject.hust.soict.ict.aims.media.Track;
-import AimsProject.hust.soict.ict.aims.store.Store;
+import hust.soict.ict.aims.media.CompactDisc;
+import hust.soict.ict.aims.media.Track;
+import hust.soict.ict.aims.store.Store;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
